@@ -12,10 +12,14 @@ __pycache__/
 venv/
 logs*/
 xtreats_outputs*/
+treats_outputs*/
 checkpoints/
 output/
 outputs/
 data/
+resources/
+test*
+hs_*
 *.pt
 *.pth
 *.bin
