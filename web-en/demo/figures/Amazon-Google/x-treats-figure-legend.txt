@@ -1,0 +1,7 @@
+X-TREATS web console (run: 20261012-190030-9b37 · Amazon-Google · X-TREATS+LEMON).
+(A) Run configuration: data source (built-in or uploaded dataset with its trained model), explanation method (LEMON/SHAP or the TREATS baseline), stream parameters (pairs per increment, time budget τ) and advanced options (ranking top-k, max. increments, simulation mode).
+(B) Run header: dataset and algorithm, run parameters, progress with one segment per increment (green = processed within τ) and stream facts (increments, pairs processed, queue delay, elapsed time).
+(C) Indicators after the latest increment, with trend and change: Precision@20, the fairness metrics Bias@k, PPVP and TPRP (0 = parity), and the mean Explanation Score.
+(D) Evolution per increment: Precision@k, fairness metrics, Explanation Score, and processing time per step against the time budget τ.
+(E) Increment detail: time breakdown (matching, ranking, explanation, queue wait) and the global top-k after aggregation, with similarity, sensitive group, Explanation Score and ground truth.
+(F) Per-attribute explanation (cumulative): attribute weight (towards match/non-match) and potential score for each attribute of the left and right entities.

@@ -130,8 +130,8 @@ def merge_clusters_with_explantion(clusters, incremental_clusters, k_ranking, ra
     incremental_clusters.extend(clusters)
 
     #select the sort methor
-    incremental_clusters.sort(key=sortBySimilarity, reverse=True) #only similarity (test when explanation is considered to rank)
-    # incremental_clusters.sort(key=sortBySimilarityExplanation, reverse=True) #Weighting: similarity and explanation
+    # incremental_clusters.sort(key=sortBySimilarity, reverse=True) #only similarity (test when explanation is considered to rank)
+    incremental_clusters.sort(key=sortBySimilarityExplanation, reverse=True) #Weighting: similarity and explanation
     # incremental_clusters = sortBySimilarityExplanationPareto(incremental_clusters, top_k=len(incremental_clusters)) #Pareto frontier: similarity and explanation
 
 

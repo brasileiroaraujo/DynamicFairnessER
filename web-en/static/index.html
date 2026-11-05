@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X-TREATS · Run console</title>
+<meta name="description" content="Explainable and fairness-aware entity resolution over streaming data.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1224'/%3E%3Cpath d='M6 9c6 0 7 7 10 7M6 23c6 0 7-7 10-7h7' fill='none' stroke='%23a5b4fc' stroke-width='2.6' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23fff'/%3E%3Ccircle cx='25' cy='16' r='2.2' fill='%2322d3ee'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+
+<!-- Icon sprite (inline, no external requests) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9z"/><path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8z"/></symbol>
+  <symbol id="i-stream" viewBox="0 0 24 24"><path d="M3 7c3 0 3-2 6-2s3 2 6 2 3-2 6-2"/><path d="M3 12c3 0 3-2 6-2s3 2 6 2 3-2 6-2"/><path d="M3 17c3 0 3-2 6-2s3 2 6 2 3-2 6-2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M7 15l4-4 3 3 5-6"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
+  <symbol id="i-term" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="emblem" aria-hidden="true">
+      <svg viewBox="0 0 32 32">
+        <defs><linearGradient id="emg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a5b4fc"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+        <path d="M4 8c6 0 8 8 12 8M4 24c6 0 8-8 12-8" fill="none" stroke="url(#emg)" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M16 16h8" stroke="url(#emg)" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="16" cy="16" r="3.4" fill="#fff"/>
+        <circle cx="27" cy="16" r="2.4" fill="#22d3ee"/>
+        <circle cx="4" cy="8" r="1.8" fill="#a5b4fc"/><circle cx="4" cy="24" r="1.8" fill="#a5b4fc"/>
+      </svg>
+    </span>
+    <div>
+      <h1>X<span>-</span>TREATS</h1>
+      <p>Explainable &amp; Fairness-Aware Entity Resolution Over Streaming Data</p>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span id="kafka-badge" class="badge" title="Micro-batch transport">Kafka: checking…</span>
+    <button id="theme-toggle" class="chrome-btn icon" type="button" aria-label="Toggle light/dark theme" title="Toggle theme">
+      <svg class="ic t-moon"><use href="#i-moon"/></svg><svg class="ic t-sun"><use href="#i-sun"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="layout">
+  <!-- ───────────── Configuration ───────────── -->
+  <aside class="sidebar">
+    <section class="panel config" aria-labelledby="cfg-title">
+      <div class="config-head">
+        <h2 id="cfg-title">New run</h2>
+        <span class="eyebrow">Configuration</span>
+      </div>
+      <form id="run-form" autocomplete="off" novalidate>
+
+        <fieldset>
+          <legend><span class="num">1</span>Dataset</legend>
+          <div id="dataset-options" class="cards" role="radiogroup" aria-label="Dataset"></div>
+          <button id="add-dataset-btn" class="btn add-btn" type="button"><svg class="ic"><use href="#i-plus"/></svg>Add dataset &amp; model</button>
+        </fieldset>
+
+        <fieldset>
+          <legend><span class="num">2</span>Explanation</legend>
+          <label class="switch">
+            <input id="explain-toggle" type="checkbox" role="switch">
+            <span class="slider" aria-hidden="true"></span>
+            <span class="switch-text">Enable explanation <small>X-TREATS</small></span>
+          </label>
+          <div id="method-wrap" hidden>
+            <div id="method-options" class="segmented" role="radiogroup" aria-label="Explanation method"></div>
+          </div>
+          <p id="algorithm-hint" class="hint"></p>
+        </fieldset>
+
+        <fieldset>
+          <legend><span class="num">3</span>Stream</legend>
+          <div class="field" style="margin-top:0"><span>Pairs per increment</span></div>
+          <div class="row" style="margin-top:8px">
+            <div id="pairs-presets" class="segmented" role="radiogroup" aria-label="Pairs-per-increment presets"></div>
+            <input id="pairs" name="pairs" type="number" inputmode="numeric" min="20" max="2000" step="1" aria-label="Pairs per increment">
+          </div>
+          <div class="field"><span>Time budget <b>τ</b> (in seconds)</span></div>
+          <div class="row" style="margin-top:8px">
+            <input id="tau-range" type="range" min="5" max="120" step="1" aria-label="Time budget in seconds">
+            <label class="unit"><input id="tau" name="tau" type="number" min="1" max="300" step="1" aria-label="τ in seconds"> s</label>
+          </div>
+          <p class="hint">Interval between two micro-batch sends. If processing an increment takes longer than τ, the following batches wait in the queue.</p>
+        </fieldset>
+
+        <details class="advanced">
+          <summary><span class="num">4</span>Advanced</summary>
+          <label class="field">Ranking top-k
+            <input id="k" type="number" min="5" max="50" step="1">
+          </label>
+          <label class="field"><span>Max. increments <small>(0 = whole dataset)</small></span>
+            <input id="max-increments" type="number" min="0" max="200" step="1">
+          </label>
+          <label class="check">
+            <input id="simulate" type="checkbox">
+            <span><strong>Simulation mode</strong> — no GPU or model. <em>Fake</em> metrics, only for testing the interface.</span>
+          </label>
+        </details>
+
+        <p id="form-error" class="form-error" role="alert" hidden></p>
+        <div class="actions">
+          <button id="start-btn" class="btn primary" type="submit"><svg class="ic"><use href="#i-play"/></svg>Start run</button>
+          <button id="stop-btn" class="btn danger" type="button" hidden><svg class="ic"><use href="#i-stop"/></svg>Stop run</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel history" aria-labelledby="hist-title">
+      <h3 id="hist-title"><svg class="ic"><use href="#i-clock"/></svg>Previous runs</h3>
+      <ul id="history-list" class="history-list"><li class="muted">None yet.</li></ul>
+    </section>
+  </aside>
+
+  <!-- ───────────── Results ───────────── -->
+  <section class="results" aria-live="polite">
+    <section id="empty-state" class="panel hero" aria-labelledby="hero-title">
+      <span class="eyebrow">Responsible entity resolution</span>
+      <h2 id="hero-title">Explainable, fairness-aware matching — one micro-batch at a time</h2>
+      <p class="lead">X-TREATS resolves entities arriving from two data streams under a time budget τ. Each increment is
+        matched by a neural matcher, re-ranked to keep sensitive groups balanced, and justified with attribute-level
+        explanations whose <strong>Explanation Score</strong> also guides the final ranking.</p>
+      <ol class="pipeline" aria-label="X-TREATS workflow">
+        <li><b>Stream</b><small>Micro-batches sent every τ seconds (Kafka)</small></li>
+        <li><b>Comparison</b><small>Ditto scores each candidate pair</small></li>
+        <li class="hl"><b>Fair ranking</b><small>Round-robin across sensitive groups</small></li>
+        <li class="hl"><b>Explanation</b><small>LEMON or SHAP → Explanation Score</small></li>
+        <li><b>Aggregation</b><small>Global top-k, one-to-one matches</small></li>
+      </ol>
+      <div class="pillars">
+        <div><svg class="ic"><use href="#i-shield"/></svg><b>Fairness</b><p>Bias@k, PPVP and TPRP compare sensitive groups after every increment.</p></div>
+        <div><svg class="ic"><use href="#i-spark"/></svg><b>Explainability</b><p>Attribute and potential scores are combined into a pair-level Explanation Score.</p></div>
+        <div><svg class="ic"><use href="#i-stream"/></svg><b>Streaming</b><p>Real-clock micro-batches; queue delay is reported when an increment exceeds τ.</p></div>
+      </div>
+      <p class="hero-cta"><svg class="ic"><use href="#i-arrow"/></svg><span>Configure a run on the left and press <b>Start run</b>.</span></p>
+    </section>
+
+    <div id="run-view" hidden>
+      <div class="panel run-head" id="status-strip">
+        <div class="rh-top">
+          <div class="rh-title">
+            <span class="eyebrow">Run</span>
+            <h2 id="run-title">—</h2>
+            <div id="run-chips" class="rh-chips"></div>
+          </div>
+          <div class="rh-state">
+            <span id="sim-flag" class="pill warn" hidden>⚠ Simulation · fake data</span>
+            <span id="state-pill" class="pill">—</span>
+          </div>
+        </div>
+        <p id="status-text" class="status-text"></p>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+          <div id="progress-bar"></div>
+          <div id="progress-segs" class="segs" aria-hidden="true"></div>
+        </div>
+        <dl class="status-facts">
+          <div><dt>Increments</dt><dd id="f-incs">0 / –</dd></div>
+          <div><dt>Pairs processed</dt><dd id="f-pairs">0</dd></div>
+          <div><dt>Queue delay</dt><dd id="f-lag">–</dd></div>
+          <div><dt>Elapsed</dt><dd id="f-elapsed">0 s</dd></div>
+        </dl>
+      </div>
+
+      <div id="error-box" class="panel error" role="alert" hidden>
+        <h3><svg class="ic"><use href="#i-alert"/></svg>The run failed</h3>
+        <p id="error-msg"></p>
+        <details><summary>Technical details</summary><pre id="error-trace"></pre></details>
+      </div>
+
+      <div id="kpis" class="kpis"></div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2><svg class="ic"><use href="#i-chart"/></svg>Evolution per increment</h2>
+        </div>
+        <div id="charts" class="charts"></div>
+        <details class="table-view">
+          <summary>View the same data as a table</summary>
+          <div class="table-wrap"><table id="metrics-table">
+            <thead><tr><th>#</th><th>P@5</th><th>P@10</th><th>P@15</th><th>P@20</th><th>Bias@k</th><th>PPVP</th><th>TPRP</th><th>ES</th><th>Match (s)</th><th>Rank (s)</th><th>Explanation (s)</th><th>Total (s)</th><th>τ</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </details>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2><svg class="ic"><use href="#i-list"/></svg>Increments</h2>
+          <div class="panel-tools">
+            <button id="expand-all" class="btn ghost small" type="button">Expand all</button>
+            <button id="collapse-all" class="btn ghost small" type="button">Collapse all</button>
+          </div>
+        </div>
+        <div id="feed" class="feed"><p class="muted">Waiting for the first increment…</p></div>
+      </div>
+
+      <details class="panel console">
+        <summary><svg class="ic"><use href="#i-term"/></svg>Process console <span id="log-count" class="muted"></span></summary>
+        <pre id="log" tabindex="0"></pre>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="foot-inner">
+    <div class="partners">
+      <span class="eyebrow">Developed by</span>
+      <div class="logo-row">
+        <span class="plate square"><img src="/static/img/logo-datalab.png" alt="DATALAB" width="58" height="44"></span>
+        <span class="plate"><img src="/static/img/logo-ifpb.png" alt="Instituto Federal da Paraíba (IFPB)" width="142" height="38"></span>
+        <span class="plate"><img src="/static/img/logo-tampere.png" alt="Tampere University" width="160" height="38"></span>
+      </div>
+    </div>
+    <div class="cites">
+      <span class="eyebrow">Publications</span>
+      <div class="cite">
+        <b>X-TREATS: Integrating explainability and fairness into streaming entity resolution.</b><br>
+        T. B. Araújo, V. Efthymiou, K. Stefanidis · <i>Information Sciences</i> 755 (2026) 123801.<br>
+        <a class="doi" href="https://doi.org/10.1016/j.ins.2026.123801" target="_blank" rel="noopener">doi.org/10.1016/j.ins.2026.123801 <svg class="ic" style="width:13px;height:13px"><use href="#i-ext"/></svg></a>
+      </div>
+      <div class="cite">
+        <b>TREATS: Fairness-aware entity resolution over streaming data.</b><br>
+        T. B. Araújo, V. Efthymiou, V. Christophides, E. Pitoura, K. Stefanidis · <i>Information Systems</i> 129 (2025) 102506.<br>
+        <a class="doi" href="https://doi.org/10.1016/j.is.2024.102506" target="_blank" rel="noopener">doi.org/10.1016/j.is.2024.102506 <svg class="ic" style="width:13px;height:13px"><use href="#i-ext"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<dialog id="add-dialog" aria-labelledby="add-title">
+  <form id="add-form" autocomplete="off" novalidate>
+    <header class="dlg-head">
+      <div>
+        <span class="eyebrow">New data source</span>
+        <h2 id="add-title">Add a dataset and its trained model</h2>
+      </div>
+      <button id="add-close" class="btn ghost small" type="button" aria-label="Close">✕</button>
+    </header>
+
+    <details class="format-help" open>
+      <summary>Expected file formats</summary>
+      <ul>
+        <li><strong>Dataset (.txt)</strong> — one labeled pair per line, three tab-separated fields:
+          <em>left entity</em> ⇥ <em>right entity</em> ⇥ <em>label</em> (<code>1</code> = same real-world entity, <code>0</code> = different).</li>
+        <li>Each entity is a list of <code>COL &lt;attribute&gt; VAL &lt;value&gt;</code>. Both sides must have the same attributes, in the same order.</li>
+        <li>Attribute names: letters, digits and <code>_</code> only (no spaces). The <strong>first attribute</strong> identifies the record (e.g. title) and cannot be empty.</li>
+        <li>UTF-8 text, at least 20 pairs, at least one pair with label 1. Same layout as <code>data/er_magellan/Structured/&lt;name&gt;/test.txt</code>.</li>
+        <li><strong>Model (.pt)</strong> — a PyTorch checkpoint saved by Ditto's training (a dict with the key <code>model</code>, like <code>checkpoints/Structured/&lt;name&gt;/model.pt</code>), trained with the language model you pick below.</li>
+      </ul>
+      <pre class="example">COL title VAL sony sound forge 8 COL maker VAL sony COL price VAL 59.99 ⇥ COL title VAL sound forge audio studio 8 COL maker VAL sony media COL price VAL 54.95 ⇥ 1</pre>
+    </details>
+
+    <div class="dlg-grid">
+      <label class="blk"><span class="lbl">Dataset name</span>
+        <input id="up-name" type="text" maxlength="40" placeholder="e.g. My-Products" required>
+        <small>Letters, digits, “-” and “_”. Appears in the dataset list.</small>
+      </label>
+
+      <label class="blk"><span class="lbl">Dataset file <span class="req">required</span></span>
+        <input id="up-test" type="file" accept=".txt,.tsv,text/plain">
+        <small id="up-test-info" class="info" role="status">The pairs that will be streamed in micro-batches (stored as <code>test.txt</code>).</small>
+      </label>
+
+      <!-- Train/validation uploads are hidden for now (no model training in the tool yet).
+           Everything behind them still works: remove the two `hidden` attributes below to bring them back. -->
+      <div class="two" id="train-valid-block" hidden>
+        <label class="blk"><span class="lbl">Train file <span class="opt">optional</span></span>
+          <input id="up-train" type="file" accept=".txt,.tsv,text/plain">
+        </label>
+        <label class="blk"><span class="lbl">Validation file <span class="opt">optional</span></span>
+          <input id="up-valid" type="file" accept=".txt,.tsv,text/plain">
+        </label>
+      </div>
+      <small class="span-all" id="train-valid-note" hidden>Train/validation files are only used to build Ditto's TF-IDF summarizer index. If omitted, the dataset file is used.</small>
+
+      <label class="blk"><span class="lbl">Trained model <span class="req">required</span></span>
+        <input id="up-model" type="file" accept=".pt,.pth">
+        <small class="warn-text">⚠ Only upload models you trust: PyTorch <code>.pt</code> files can run code when loaded.</small>
+      </label>
+
+      <div class="two">
+        <label class="blk"><span class="lbl">Language model</span>
+          <select id="up-lm"></select>
+        </label>
+        <label class="blk"><span class="lbl">Match threshold</span>
+          <input id="up-threshold" type="number" min="0.01" max="0.99" step="0.01" value="0.5">
+        </label>
+      </div>
+      <small class="span-all">The language model must be the one used to train the checkpoint. The threshold is the score above which the model calls a pair a match (the built-in datasets use 0.1–0.6).</small>
+
+      <fieldset class="groups span-all">
+        <legend>Fairness groups</legend>
+        <div class="two">
+          <label class="blk"><span class="lbl">Sensitive attribute</span>
+            <select id="up-sens" disabled><option value="">Choose the dataset file first</option></select>
+          </label>
+          <label class="blk"><span class="lbl">Group keywords</span>
+            <input id="up-groups" type="text" placeholder="e.g. microsoft, sony, apple">
+          </label>
+        </div>
+        <p class="hint">Each keyword defines one sensitive group: a value (or part of a value) of the chosen attribute that identifies the entities you want to treat as a group — e.g. the manufacturers <em>microsoft, sony, apple</em> or the categories <em>printers, laptops</em>. Separate keywords with commas. A pair joins the <em>first</em> group whose keyword appears (case-insensitive) in that attribute of either entity; everything else is group “others”. Bias@k, PPVP and TPRP compare these groups.</p>
+        <div id="up-chips" class="chips-row" aria-live="polite"></div>
+      </fieldset>
+    </div>
+
+    <div id="up-progress" class="up-progress" hidden></div>
+    <p id="up-error" class="form-error" role="alert" hidden></p>
+
+    <div class="actions">
+      <button id="up-cancel" class="btn" type="button">Cancel</button>
+      <button id="up-submit" class="btn primary" type="submit">Upload &amp; add</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
